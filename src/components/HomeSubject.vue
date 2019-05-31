@@ -7,7 +7,6 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">#</th>
                 <th scope="col">Subject Code</th>
                 <th scope="col">Subject</th>
                 <th scope="col">Credit</th>
@@ -16,7 +15,7 @@
             </thead>
             <tbody>
               <tr v-for="dataSubject in dataSubjects" :key="dataSubject.id">
-                <th scope="row">{{dataSubject.key}}</th>
+                
                 <td>{{dataSubject.subjectCode}}</td>
                 <td>{{dataSubject.subject}}</td>
                 <td>{{dataSubject.credit}}</td>
@@ -38,8 +37,12 @@
           </table>
         </div>
         <div class="col-sm-12 col-lg-12">
-          <button class="btn btn-primary" type="submit" @click="calculator">Calculator</button>
-          <h2>{{status}}</h2>
+          <div class="Cal">
+            <div :class="statusClass">{{status}}</div>
+            <div class="credit">หน่วยกิตรวม {{creditAll}}{{creditLost}}</div>
+            <div class="btCal" @click="calculator">Calculator</div>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -49,8 +52,10 @@
 export default {
   data: function() {
     return {
+      statusClass:"status",
       creditAll:0,
-      status:"----",
+      creditLost:'',
+      status:"ป้อนเกรดของคุณ",
       dataSubjects: [
         { subjectCode: '240-101', subject: 'Introduction to Computer Programming', credit: 3, value:0 },
         { subjectCode: '240-201', subject: 'Computer Engineering Software Laboratory I', credit: 1, value:0 },
@@ -88,10 +93,17 @@ export default {
           if(this.dataSubjects[i].value>0){
             this.creditAll=this.creditAll+this.dataSubjects[i].credit
             console.log("Credit:",this.creditAll)
-            if(this.creditAll>=(53*80/100))
+            if(this.creditAll>=(53*80/100)){
+              this.creditLost = ' ผ่านเกณฑ์'          
               this.status='Pass'
-            else if(this.creditAll<(53*80/100))
+              this.statusClass='Pass'
+            }
+            else if(this.creditAll<(53*80/100)){
+              let x = 53-(this.creditAll)
+              this.creditLost = ' ขาดอีก '+ x
               this.status='False'
+              this.statusClass='NoPass'
+            }
           }
        }
     }
@@ -100,7 +112,75 @@ export default {
 };
 </script>
 <style scoped>
+.table {
+  font-family: 'Varela Round', sans-serif;
+}
+.container-fluid{
+
+}
 .subject {
   background-color: aquamarine;
+}
+.Cal {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 10px;
+}
+.btCal {
+  user-select: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 200px;
+  height: 50px;
+  background-color: #174873;
+  color: #fff;
+  font-size: 25px;
+}
+.btCal:hover{
+  background-color: #1a609c;
+}
+.credit{
+  font-family: 'Prompt', sans-serif;
+  font-size: 20px;
+  padding: 20px;
+}
+.status {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 200px;
+  height: 50px;
+  background-color: #174873;
+  padding: 20px;
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Prompt', sans-serif;
+}
+.NoPass {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 200px;
+  height: 50px;
+  background-color: #ff0000;
+  padding: 20px;
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Prompt', sans-serif;
+}
+.Pass {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 200px;
+  height: 50px;
+    background-color: #1c8d2f;
+  padding: 20px;
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Prompt', sans-serif;
 }
 </style>
